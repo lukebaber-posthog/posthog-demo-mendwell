@@ -30,7 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files: .env is committed (public PostHog values only); anything secret goes in .env*.local
+# env files: set these in Vercel for deploys, .env.local for local dev
+.env
 .env*.local
 
 # vercel

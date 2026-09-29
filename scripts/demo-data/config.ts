@@ -1,5 +1,5 @@
 // Tunables for the synthetic backdated dataset. Every value can be overridden from
-// the environment (bun auto-loads .env, which supplies the project token).
+// the environment (bun auto-loads .env.local, which supplies the project token).
 
 const num = (key: string, fallback: number) => {
   const raw = process.env[key];

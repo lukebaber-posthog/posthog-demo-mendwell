@@ -14,11 +14,12 @@ It sends to PostHog project **Claims Portal Demo** (`636166`). The walkthrough i
 ## Run it
 
 ```bash
+cp .env.example .env.local   # then fill in the PostHog token
 bun install
 bun dev
 ```
 
-`.env` already holds the public PostHog token. Put overrides in `.env.local`.
+On Vercel, set the same variables in the project's environment variables.
 
 ## Demo data
 
