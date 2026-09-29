@@ -16,6 +16,7 @@ import {
 import { newClaimNumber, rememberFirstName } from "@/lib/claim/claim-number";
 import { CLAIM_STEPS, EMPTY_CLAIM, type ClaimData, type ClaimErrors, type ClaimField } from "@/lib/claim/steps";
 import { validateStep } from "@/lib/claim/validation";
+import { useMounted } from "@/lib/use-mounted";
 import { PrepChecklist } from "./prep-checklist";
 import { StepProgress } from "./step-progress";
 import { AboutYouStep } from "./steps/about-you-step";
@@ -33,6 +34,7 @@ export function ClaimFlow({ entry }: { entry: ClaimEntry }) {
   // Reading the flag here, on every /claim load, is what records the experiment
   // exposure ($feature_flag_called), whichever step the claimant ends up on.
   const checklistVariant = useFeatureFlagVariantKey(FLAGS.PREP_CHECKLIST);
+  const mounted = useMounted();
 
   const started = useRef(false);
   useEffect(() => {
@@ -80,7 +82,7 @@ export function ClaimFlow({ entry }: { entry: ClaimEntry }) {
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-8 px-4 pt-16 pb-12">
       <StepProgress current={stepIndex} />
-      {stepIndex === 0 && checklistVariant === PREP_CHECKLIST_VARIANTS.TEST && <PrepChecklist />}
+      {mounted && stepIndex === 0 && checklistVariant === PREP_CHECKLIST_VARIANTS.TEST && <PrepChecklist />}
       <form
         noValidate
         className="flex flex-col gap-6"

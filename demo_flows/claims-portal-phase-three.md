@@ -20,7 +20,7 @@ PostHog project: **Claims Portal Demo** (`636166`, Test Org).
 
 ## 1.1 A user journey, from capture to insight
 
-**Live:** go to `/`, click **Start a claim**, and type the health number with spaces (`9123 456 789`). Hit **Continue** a few times, then fix it and submit with a made-up `@example.com` email.
+**Live:** go to `/`, click **Start a claim**, click **Fill sample**, then retype the health number with spaces (`9123 456 789`). Hit **Continue** a few times, then fix it. Use **Fill sample** on the next two steps and submit.
 
 **In PostHog:**
 - **Activity**: your events arrive live: `claim_started`, `claim_field_error`, `claim_step_completed`, `claim_submitted`.
@@ -38,7 +38,7 @@ PostHog project: **Claims Portal Demo** (`636166`, Test Org).
 - **Results:**
   - Submissions: control ~45%, test ~57%.
   - Step 1 completion is up and health-number errors per claimant are down.
-- **Show the variant:** the checklist is the lavender card above step 1. Open `/claim` in two browsers to see both variants, or override the flag in the toolbar.
+- **Show the variant:** the checklist is the lavender card above step 1. Use the dark switcher at the bottom of the site to flip between **Control** and **Test**. It marks the variant PostHog actually assigned you, and the reset icon goes back to it. The override only affects your browser, and the switcher is left out of replays.
 - **Release toggle with remote config:**
   1. Turn `service-alert-banner` on and refresh the site. The green bar appears.
   2. Edit the payload `message` and refresh again. The copy changes without a deploy.

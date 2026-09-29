@@ -1,13 +1,19 @@
 import { Input } from "@/components/ui/input";
+import { sampleAboutYou } from "@/lib/claim/sample";
 import { Field } from "../field";
+import { FillSampleButton } from "./fill-sample-button";
 import { StepHeading } from "./step-heading";
 import { bind, type StepProps } from "./step-props";
 
 export function AboutYouStep(props: StepProps) {
-  const { errors } = props;
+  const { errors, update } = props;
   return (
     <>
-      <StepHeading title="About you" subtitle="We use this to confirm who you are." />
+      <StepHeading
+        title="About you"
+        subtitle="We use this to confirm who you are."
+        action={<FillSampleButton sample={sampleAboutYou} update={update} />}
+      />
       <div className="grid gap-5 sm:grid-cols-2">
         <Field id="firstName" label="First name" error={errors.firstName}>
           <Input autoComplete="given-name" {...bind(props, "firstName")} />

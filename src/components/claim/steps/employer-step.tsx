@@ -1,7 +1,9 @@
 import { Input } from "@/components/ui/input";
 import { INDUSTRIES, YES_NO } from "@/lib/claim/options";
+import { sampleEmployer } from "@/lib/claim/sample";
 import { ChoiceChips } from "../choice-chips";
 import { Field } from "../field";
+import { FillSampleButton } from "./fill-sample-button";
 import { StepHeading } from "./step-heading";
 import { bind, type StepProps } from "./step-props";
 
@@ -9,7 +11,11 @@ export function EmployerStep(props: StepProps) {
   const { data, errors, update } = props;
   return (
     <>
-      <StepHeading title="Your employer" subtitle="We'll let them know a claim has been filed." />
+      <StepHeading
+        title="Your employer"
+        subtitle="We'll let them know a claim has been filed."
+        action={<FillSampleButton sample={sampleEmployer} update={update} />}
+      />
       <Field id="employerName" label="Employer name" error={errors.employerName}>
         <Input autoComplete="organization" {...bind(props, "employerName")} />
       </Field>

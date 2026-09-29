@@ -1,8 +1,10 @@
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { BODY_PARTS, INJURY_TYPES, YES_NO } from "@/lib/claim/options";
+import { sampleInjury } from "@/lib/claim/sample";
 import { ChoiceChips } from "../choice-chips";
 import { Field } from "../field";
+import { FillSampleButton } from "./fill-sample-button";
 import { StepHeading } from "./step-heading";
 import { bind, type StepProps } from "./step-props";
 
@@ -10,7 +12,11 @@ export function InjuryStep(props: StepProps) {
   const { data, errors, update } = props;
   return (
     <>
-      <StepHeading title="Your injury" subtitle="Tell us what happened. A few lines is plenty." />
+      <StepHeading
+        title="Your injury"
+        subtitle="Tell us what happened. A few lines is plenty."
+        action={<FillSampleButton sample={sampleInjury} update={update} />}
+      />
       <Field id="injuryDate" label="Date of injury" error={errors.injuryDate}>
         <Input type="date" {...bind(props, "injuryDate")} />
       </Field>
