@@ -1,7 +1,11 @@
 import posthog from "posthog-js";
 import { redactEvent } from "@/lib/analytics/redact";
 
-posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN!, {
+// The presenter runbook (/runbook) isn't part of the claimant journey, so PostHog
+// stays off there and it never shows up in the demo data.
+const isRunbook = typeof window !== "undefined" && window.location.pathname.startsWith("/runbook");
+
+if (!isRunbook) posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN!, {
   api_host: "/ingest",
   ui_host: "https://us.posthog.com",
   defaults: "2026-01-30",

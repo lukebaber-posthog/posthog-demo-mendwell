@@ -2,14 +2,14 @@
 
 Mendwell is a fictional workplace-injury claims portal. It covers the 40% "Demonstrated Capability & Insights" section of the rubric with a single journey: a claimant files a claim, and you follow them through analytics, an experiment and a masked replay.
 
-PostHog project: **Claims Portal Demo** (`636166`, Test Org).
+PostHog project: **Claims Portal Demo** (`636166`, Test Org). This runbook also renders at `/runbook` on the site, which nothing links to.
 
-| What | Link |
-| --- | --- |
-| Dashboard | https://us.posthog.com/project/636166/dashboard/2150479 |
-| Experiment | https://us.posthog.com/project/636166/experiments/469321 |
-| Banner flag | https://us.posthog.com/project/636166/feature_flags/919743 |
-| Replay settings | https://us.posthog.com/project/636166/settings/environment-replay |
+| What            | Link                                                                                                 |
+| --------------- | ---------------------------------------------------------------------------------------------------- |
+| Dashboard       | [Claims portal: user journey](https://us.posthog.com/project/636166/dashboard/2150479)               |
+| Experiment      | [Claim form: "what you'll need" checklist](https://us.posthog.com/project/636166/experiments/469321) |
+| Banner flag     | [service-alert-banner](https://us.posthog.com/project/636166/feature_flags/919743)                   |
+| Replay settings | [Replay and masking settings](https://us.posthog.com/project/636166/settings/environment-replay)     |
 
 ## Before the demo
 
@@ -23,6 +23,7 @@ PostHog project: **Claims Portal Demo** (`636166`, Test Org).
 **Live:** go to `/`, click **Start a claim**, click **Fill sample**, then retype the health number with spaces (`9123 456 789`). Hit **Continue** a few times, then fix it. Use **Fill sample** on the next two steps and submit.
 
 **In PostHog:**
+
 - **Activity**: your events arrive live: `claim_started`, `claim_field_error`, `claim_step_completed`, `claim_submitted`.
 - **Person**: the profile has your email. The anonymous visit before submit is merged in, because `identify` runs on submit.
 - **Dashboard**:
@@ -58,10 +59,51 @@ Open the replay from 1.1, or pick one from the funnel drop-off.
 
 ## Prompts for PostHog AI (section 2.2)
 
-- "Why are claimants dropping off on step 1 of the claim form?"
-- "Summarize sessions where someone hit a health number error"
-- "Is the checklist experiment significant? Should we ship it?"
-- "Build me an insight of claims submitted by industry for the last two weeks"
+- `In my Claims Portal Demo project, why are claimants dropping off on step 1 of the claim form?`
+- `Summarize sessions where someone hit a health number error`
+- `In my Claims Portal Demo project, is the checklist experiment significant? Should we ship it?`
+- `Build me an insight of claims submitted by industry for the last two weeks`
+
+## SQL queries for the SQL editor
+
+Paste these into **SQL editor** in PostHog. They cover the synthetic history and any live sessions.
+
+### Submission rate by experiment variant
+
+Shows the same split as the experiment, straight from the raw events: equal-sized arms, with test submitting more often.
+
+```sql
+SELECT
+    properties.`$feature/claim-prep-checklist` AS variant,
+    uniqIf(person_id, event = 'claim_started') AS started,
+    uniqIf(person_id, event = 'claim_submitted') AS submitted,
+    round(100 * submitted / started, 1) AS submit_rate_pct
+FROM events
+WHERE event IN ('claim_started', 'claim_submitted')
+    AND timestamp >= now() - INTERVAL 30 DAY
+    AND properties.`$feature/claim-prep-checklist` IN ('control', 'test')
+GROUP BY variant
+ORDER BY variant
+```
+
+### Form errors by field, device and reason
+
+Shows that the health number leads the errors, mostly typed wrong rather than left empty, and worse on mobile.
+
+```sql
+SELECT
+    properties.field AS field,
+    properties.$device_type AS device,
+    properties.reason AS reason,
+    count() AS errors,
+    uniq(person_id) AS claimants
+FROM events
+WHERE event = 'claim_field_error'
+    AND timestamp >= now() - INTERVAL 30 DAY
+GROUP BY field, device, reason
+ORDER BY errors DESC
+LIMIT 15
+```
 
 ## About the data
 

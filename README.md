@@ -9,7 +9,7 @@ It demonstrates:
 - **Feature flags with remote config:** a service banner whose copy comes from the flag payload (`service-alert-banner`).
 - **Session replay with privacy controls:** every input is masked, text marked `.ph-mask` is masked, `.ph-no-capture` elements are blocked, and claim numbers are redacted from URLs.
 
-It sends to PostHog project **Claims Portal Demo** (`636166`). The walkthrough is in [`demo_flows/claims-portal-phase-three.md`](demo_flows/claims-portal-phase-three.md).
+It sends to PostHog project **Claims Portal Demo** (`636166`). The presenter runbook is [`demo_flows/claims-portal-phase-three.md`](demo_flows/claims-portal-phase-three.md). The site also renders it, colour-coded, at `/runbook`, which isn't linked anywhere.
 
 ## Run it
 
@@ -41,6 +41,7 @@ bun run seed:bots        # real browser sessions for session replay; the app mus
 | `src/lib/claim` | Steps, options, validation and claim analytics |
 | `src/lib/analytics` | Event names and the `before_send` redaction |
 | `src/lib/flags.ts` | Feature flag keys |
+| `src/app/runbook`, `src/lib/runbook` | `/runbook`: renders the runbook Markdown at build time |
 | `instrumentation-client.ts` | PostHog init, including replay masking |
 | `scripts/demo-data` | Synthetic backdated event generator |
 | `scripts/bots` | Playwright visitors that record replays |
